@@ -12,6 +12,7 @@
 // UGH!
 
 #define CHUNK 10000
+#define SHOW false
 
 
 //            0! 1! 2! 3! 4!  5!   6!   7!    8!     9!      10!
@@ -200,6 +201,7 @@ main(int argc, char** argv)
     int i;
     int start;
     int end;
+    int count;
     bool found;
     TTile tiles[9];
     TPlacement p;
@@ -214,18 +216,27 @@ main(int argc, char** argv)
             tiles[i].fPattern[3] = MATCHMASK - 4;
         }
 
+        count = 0;
         start = 0;
         while(start < fact[9]){
             end = start + CHUNK < fact[9] ? start + CHUNK : fact[9];
             found = solve(tiles, &p, &start, end);
             if (found){
-                for(i=0; i<SIZE; i++){
-                    printf("%d th -> (%d, %d)\n", i, p.fPermutation[i], p.fRotation[i]);
-                }
+                count++;
                 start++;
+                if(SHOW){
+                    for(i=0; i<SIZE; i++){
+                        printf("%d th -> (%d, %d)\n", i, p.fPermutation[i], p.fRotation[i]);
+                    }
+                }else{
+                    printf("!");
+                }
             }else{
                 printf(".");
             }
         }
-    } }
+        printf("=====\n");
+        printf("%d solutions found.\n", count);
+    }
+}
 
