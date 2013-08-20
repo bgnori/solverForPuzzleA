@@ -10,7 +10,8 @@
 
 #define MATCHMASK (8+4+2+1)
 // UGH!
-//
+
+#define CHUNK 10000
 
 
 //            0! 1! 2! 3! 4!  5!   6!   7!    8!     9!      10!
@@ -24,6 +25,7 @@ perfhash(int n, int* buf)
 {
     /* 
      * calculate permunation from hash
+     * http://www.ic-net.or.jp/home/takaken/nt/slide/hash.html
      */
     int i;
     int nth;
@@ -172,35 +174,35 @@ try_placement(TTile* tiles, TPlacement* p)
 }
 
 
-TPlacement* 
-solve(TTile* tiles)
+bool
+solve(TTile* tiles, TPlacement* p, int* start, int end)
 {
     int i;
     int at;
-    TPlacement* p;
 
-    p = malloc(sizeof(TPlacement));
-
-    for(i = 0; i < fact[9]; i++){
+    for(i = *start; i < end; i++){
         perfhash(i, p->fPermutation);
         at = -1;
         while(rotate(at, p->fRotation)){
             at = try_placement(tiles, p);
             if (at < 0){
-                return p;
+                *start = i;
+                return true;
             }
         }
     }
-    return 0;
+    return false;
 }
 
 int
 main(int argc, char** argv)
 {
     int i;
+    int start;
+    int end;
+    bool found;
     TTile tiles[9];
-    TPlacement* p;
-
+    TPlacement p;
 
     if(TEST){
         printf("%d\n", test_perfhash());
@@ -212,14 +214,18 @@ main(int argc, char** argv)
             tiles[i].fPattern[3] = MATCHMASK - 4;
         }
 
-        p = solve(tiles);
-        if (p){
-            for(i=0; i<SIZE; i++){
-                printf("%d th -> (%d, %d)\n", i, p->fPermutation[i], p->fRotation[i]);
+        start = 0;
+        while(start < fact[9]){
+            end = start + CHUNK < fact[9] ? start + CHUNK : fact[9];
+            found = solve(tiles, &p, &start, end);
+            if (found){
+                for(i=0; i<SIZE; i++){
+                    printf("%d th -> (%d, %d)\n", i, p.fPermutation[i], p.fRotation[i]);
+                }
+                start++;
+            }else{
+                printf(".");
             }
-        }else{
-            printf("No solution.\n");
         }
-    }
-}
+    } }
 
