@@ -11,7 +11,7 @@
 #define MATCHMASK (8+4+2+1)
 // UGH!
 
-#define CHUNK 10000
+#define CHUNK 1000000
 #define SHOW false
 
 
@@ -140,7 +140,7 @@ test_up(int idx, TTile* tiles, TPlacement* p)
     v = idx2v(idx);
     n = hv2idx(h - 1, v);
 
-    return !(get_pattern(n, tiles, p, 2) ^ get_pattern(idx, tiles, p, 0) ^ MATCHMASK);
+    return !((get_pattern(n, tiles, p, 2) ^ get_pattern(idx, tiles, p, 0) ^ MATCHMASK) & MATCHMASK);
 }
 
 bool
@@ -155,7 +155,7 @@ test_left(int idx, TTile* tiles, TPlacement* p)
     v = idx2v(idx);
     n = hv2idx(h - 1, v);
 
-    return !(get_pattern(n, tiles, p, 3) ^ get_pattern(idx, tiles, p, 1) ^ MATCHMASK);
+    return !((get_pattern(n, tiles, p, 3) ^ get_pattern(idx, tiles, p, 1) ^ MATCHMASK) & MATCHMASK);
 }
 
 
@@ -202,6 +202,7 @@ main(int argc, char** argv)
     int start;
     int end;
     int count;
+    int ln;
     bool found;
     TTile tiles[9];
     TPlacement p;
@@ -209,15 +210,25 @@ main(int argc, char** argv)
     if(TEST){
         printf("%d\n", test_perfhash());
     }else{
-        for(i=0; i<SIZE; i++){
-            tiles[i].fPattern[0] = 1;
-            tiles[i].fPattern[1] = 4;
-            tiles[i].fPattern[2] = MATCHMASK - 1;
-            tiles[i].fPattern[3] = MATCHMASK - 4;
+        if (false){
+            for(i=0; i<SIZE; i++){
+                tiles[i].fPattern[0] = 1;
+                tiles[i].fPattern[1] = 4;
+                tiles[i].fPattern[2] = MATCHMASK - 1;
+                tiles[i].fPattern[3] = MATCHMASK - 4;
+            }
+        }else{
+            for(i=0; i<SIZE; i++){
+                tiles[i].fPattern[0] = 1;
+                tiles[i].fPattern[1] = 4;
+                tiles[i].fPattern[2] = MATCHMASK;
+                tiles[i].fPattern[3] = MATCHMASK;
+            }
         }
 
         count = 0;
         start = 0;
+        ln = 0;
         while(start < fact[9]){
             end = start + CHUNK < fact[9] ? start + CHUNK : fact[9];
             found = solve(tiles, &p, &start, end);
@@ -232,7 +243,14 @@ main(int argc, char** argv)
                     printf("!");
                 }
             }else{
+                //fwrite(".", 1, 1, stdout);
                 printf(".");
+                ln ++;
+                if (ln > 20){
+                    printf("\n");
+                    ln = 0;
+                }
+                fflush(stdout);
             }
         }
         printf("=====\n");
