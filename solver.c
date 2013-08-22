@@ -85,7 +85,10 @@ rotate(int idx, int* buf)
         }
         return true;
     }
-
+    if(buf[idx] == 3){
+        return false;
+    }
+    buf[idx] ++;
     return false;
 }
 
@@ -246,15 +249,17 @@ main(int argc, char** argv)
                 //fwrite(".", 1, 1, stdout);
                 printf(".");
                 ln ++;
-                if (ln > 20){
+                if (ln >= 20){
                     printf("\n");
                     ln = 0;
                 }
                 fflush(stdout);
             }
         }
+        printf("\n");
         printf("=====\n");
         printf("%d solutions found.\n", count);
+        fflush(stdout);
     }
 }
 
