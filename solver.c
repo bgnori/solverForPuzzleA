@@ -9,6 +9,20 @@
 #define SIZE 9
 
 #define MATCHMASK (8+4+2+1)
+
+#define CRAB_L (8+4+2)
+#define CRAB_R (1)
+
+#define FISH_H (8+4+1)
+#define FISH_T (2)
+
+#define DRAGON_H (8+2+1)
+#define DRAGON_T (4)
+
+#define SHELLS_S (4+2+1)
+#define SHELLS_N (8)
+
+
 // UGH!
 
 #define CHUNK 1000000
@@ -220,7 +234,6 @@ main(int argc, char** argv)
                 tiles[i].fPattern[2] = MATCHMASK - 1;
                 tiles[i].fPattern[3] = MATCHMASK - 4;
             }
-        }else{
             for(i=0; i<SIZE; i++){
                 tiles[i].fPattern[0] = 1;
                 tiles[i].fPattern[1] = 4;
@@ -228,6 +241,53 @@ main(int argc, char** argv)
                 tiles[i].fPattern[3] = MATCHMASK;
             }
         }
+        //real data
+        
+        tiles[0].fPattern[0] = SHELLS_S;
+        tiles[0].fPattern[1] = SHELLS_N;
+        tiles[0].fPattern[2] = DRAGON_H;
+        tiles[0].fPattern[3] = FISH_H;
+
+        tiles[1].fPattern[0] = FISH_T;
+        tiles[1].fPattern[1] = CRAB_L;
+        tiles[1].fPattern[2] = DRAGON_H;
+        tiles[1].fPattern[3] = SHELLS_N;
+
+        tiles[2].fPattern[0] = FISH_H;
+        tiles[2].fPattern[1] = DRAGON_T;
+        tiles[2].fPattern[2] = FISH_T;
+        tiles[2].fPattern[3] = CRAB_R;
+
+        tiles[3].fPattern[0] = DRAGON_T;
+        tiles[3].fPattern[1] = CRAB_R;
+        tiles[3].fPattern[2] = FISH_H;
+        tiles[3].fPattern[3] = SHELLS_S;
+
+        tiles[4].fPattern[0] = DRAGON_T;
+        tiles[4].fPattern[1] = CRAB_R;
+        tiles[4].fPattern[2] = FISH_H;
+        tiles[4].fPattern[3] = SHELLS_N;
+
+        tiles[5].fPattern[0] = FISH_H;
+        tiles[5].fPattern[1] = CRAB_R;
+        tiles[5].fPattern[2] = DRAGON_T;
+        tiles[5].fPattern[3] = SHELLS_N;
+
+        tiles[6].fPattern[0] = FISH_T;
+        tiles[6].fPattern[1] = CRAB_L;
+        tiles[6].fPattern[2] = SHELLS_N;
+        tiles[6].fPattern[3] = DRAGON_T;
+
+        tiles[7].fPattern[0] = DRAGON_H;
+        tiles[7].fPattern[1] = CRAB_R;
+        tiles[7].fPattern[2] = FISH_T;
+        tiles[7].fPattern[3] = SHELLS_S;
+
+        tiles[8].fPattern[0] = CRAB_R;
+        tiles[8].fPattern[1] = CRAB_L;
+        tiles[8].fPattern[2] = DRAGON_T;
+        tiles[8].fPattern[3] = SHELLS_S;
+
 
         count = 0;
         start = 0;
@@ -247,13 +307,15 @@ main(int argc, char** argv)
                 }
             }else{
                 //fwrite(".", 1, 1, stdout);
-                printf(".");
-                ln ++;
-                if (ln >= 20){
-                    printf("\n");
-                    ln = 0;
+                if (false){
+                    printf(".");
+                    ln ++;
+                    if (ln >= 20){
+                        printf("\n");
+                        ln = 0;
+                    }
+                    fflush(stdout);
                 }
-                fflush(stdout);
             }
         }
         printf("\n");
