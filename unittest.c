@@ -93,6 +93,78 @@ test_perfhash_max(void)
     return NULL;
 }
 
+static
+const_char_p
+test_rotate_clear(void)
+{
+    int buf[9];
+    int i;
+    bool ret;
+
+    ret = rotate(-1, buf);
+    if(!ret){
+        return __func__;
+    }
+    for(i=0; i < 9; i++){
+        if (buf[i] != 0){
+            return __func__;
+        }
+    }
+    return NULL;
+}
+
+static
+const_char_p
+test_rotate_ok(void)
+{
+    int buf[9] = {0,0,0,0,0,0,0,0,0,};
+    int i;
+    bool ret;
+
+    ret = rotate(1, buf);
+    if(!ret){
+        return __func__;
+    }
+    for(i=0; i < 9; i++){
+        if (i == 1) {
+            if (buf[i] != 1){
+                return __func__;
+            }
+        }else{
+            if (buf[i] != 0){
+                return __func__;
+            }
+        }
+    }
+    return NULL;
+}
+
+static
+const_char_p
+test_rotate_fail(void)
+{
+    int buf[9] = {0,3,0,0,0,0,0,0,0,};
+    int i;
+    bool ret;
+
+    ret = rotate(1, buf);
+    if(ret){
+        return __func__;
+    }
+    for(i=0; i < 9; i++){
+        if (i == 1) {
+            if (buf[i] != 3){
+                return __func__;
+            }
+        }else{
+            if (buf[i] != 0){
+                return __func__;
+            }
+        }
+    }
+    return NULL;
+}
+
 
 /*
         if (false){
@@ -120,6 +192,9 @@ unittest cases[] = {
     test_fact_x,
     test_perfhash_0,
     test_perfhash_max,
+    test_rotate_clear,
+    test_rotate_ok,
+    test_rotate_fail,
 };
 
 int

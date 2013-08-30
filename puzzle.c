@@ -61,11 +61,11 @@ rotate(int idx, int* buf)
         }
         return true;
     }
-    if(buf[idx] == 3){
+    if(buf[idx] >= 3){
         return false;
     }
     buf[idx] ++;
-    return false;
+    return true;
 }
 
 int
