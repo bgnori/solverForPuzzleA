@@ -1,23 +1,28 @@
 #include "puzzle.h"
+typedef const char* const_char_p;
+typedef const_char_p (*unittest)(void);
 
-static const char*
-test_fact_0()
+static
+const_char_p
+test_fact_0(void)
 {
     if (fact[0] != 1)
         return __func__;
     return NULL;
 }
 
-static const char*
-test_fact_1()
+static
+const_char_p
+test_fact_1(void)
 {
     if (fact[1] != 1)
         return __func__;
     return NULL;
 }
 
-static const char*
-test_fact_6()
+static
+const_char_p
+test_fact_6(void)
 {
     if (fact[6] != 720)
         return __func__;
@@ -25,28 +30,69 @@ test_fact_6()
 }
 
 
-static bool
-test_perfhash(void)
+static 
+int
+dfact(int n)
+{
+    if(n==0)
+        return 1;
+    return dfact(n-1) * n;
+}
+
+static
+const_char_p
+test_fact_x(void)
+{
+    int i;
+
+    for (i=0; i < 11; i++){
+        if (fact[i] != dfact(i))
+            return __func__;
+    }
+    return NULL;
+}
+
+static
+const_char_p
+test_perfhash_x(void)
+{
+    return NULL;
+}
+
+static
+const_char_p
+test_perfhash_0(void)
 {
     int buf[9];
     int i;
-    bool ret = true;
+    perfhash(0, buf);
+
+    for(i=0; i < 9; i++){
+        if (buf[i] != i){
+            return __func__;
+        }
+    }
+
+    return NULL;
+}
+
+static
+const_char_p
+test_perfhash_max(void)
+{
+    int buf[9];
+    int i;
     perfhash(fact[9] - 1, buf);
 
     for(i=0; i < 9; i++){
-        printf("%d,", buf[i]);
-        ret = ret && (buf[i] == 8 - i);
+        if (buf[i] != 8 - i){
+            //expect: 8, 7, 6, 5, 4, 3, 2, 1, 0
+            return __func__;
+        }
     }
-
-    perfhash(0, buf);
-    for(i=0; i < 9; i++){
-        printf("%d,", buf[i]);
-        ret = ret && (buf[i] == i);
-    }
-    return ret;
-
-    // return __func__;
+    return NULL;
 }
+
 
 /*
         if (false){
@@ -66,13 +112,14 @@ test_perfhash(void)
 */
 
 
-typedef const char* const_char_p;
-typedef const_char_p (*unittest)(void);
 
 unittest cases[] = {
     test_fact_0,
     test_fact_1,
     test_fact_6,
+    test_fact_x,
+    test_perfhash_0,
+    test_perfhash_max,
 };
 
 int
