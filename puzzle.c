@@ -120,3 +120,23 @@ try_placement(TTile* tiles, TPlacement* p)
     return -1; //success. valid way to place tiles.
 }
 
+bool
+solve(TTile* tiles, TPlacement* p, int* start, int end)
+{
+    int i;
+    int at;
+
+    for(i = *start; i < end; i++){
+        perfhash(i, p->fPermutation);
+        at = -1;
+        while(rotate(at, p->fRotation)){
+            at = try_placement(tiles, p);
+            if (at < 0){
+                *start = i;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+

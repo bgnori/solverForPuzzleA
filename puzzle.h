@@ -42,4 +42,5 @@ bool ok_up(int idx, TTile* tiles, TPlacement* p);
 bool ok_left(int idx, TTile* tiles, TPlacement* p);
 
 int try_placement(TTile* tiles, TPlacement* p);
+bool solve(TTile* tiles, TPlacement* p, int* start, int end);
 

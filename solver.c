@@ -7,25 +7,6 @@
 #define CHUNK 1000000
 #define SHOW false
 
-bool
-solve(TTile* tiles, TPlacement* p, int* start, int end)
-{
-    int i;
-    int at;
-
-    for(i = *start; i < end; i++){
-        perfhash(i, p->fPermutation);
-        at = -1;
-        while(rotate(at, p->fRotation)){
-            at = try_placement(tiles, p);
-            if (at < 0){
-                *start = i;
-                return true;
-            }
-        }
-    }
-    return false;
-}
 
 int
 main(int argc, char** argv)
