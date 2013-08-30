@@ -12,10 +12,10 @@ solver: solver.o libpuzzle.so
 solver.o : puzzle.h solver.c
 	gcc -std=c99 -Wall -c solver.c
 
-unittest: unittest.o libpuzzle.so libqueue.so
+unittest: unittest.o libpuzzle.so 
 	gcc unittest.o -L. -lpuzzle -o unittest
 
-unittest.o : puzzle.h unittest.c libqueue.so
+unittest.o : puzzle.h unittest.c
 	gcc -std=c99 -Wall -c unittest.c
 
 libpuzzle.so: puzzle.o

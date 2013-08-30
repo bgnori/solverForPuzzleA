@@ -1,196 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include "puzzle.h"
 
 #define TEST false
-
-#define HSIZE 3
-#define VSIZE 3
-#define SIZE 9
-
-#define MATCHMASK (8+4+2+1)
-
-#define CRAB_L (8+4+2)
-#define CRAB_R (1)
-
-#define FISH_H (8+4+1)
-#define FISH_T (2)
-
-#define DRAGON_H (8+2+1)
-#define DRAGON_T (4)
-
-#define SHELLS_S (4+2+1)
-#define SHELLS_N (8)
-
 
 // UGH!
 
 #define CHUNK 1000000
 #define SHOW false
-
-
-//            0! 1! 2! 3! 4!  5!   6!   7!    8!     9!      10!
-int fact[] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800};
-
-
-
-
-void
-perfhash(int n, int* buf)
-{
-    /* 
-     * calculate permunation from hash
-     * http://www.ic-net.or.jp/home/takaken/nt/slide/hash.html
-     */
-    int i;
-    int nth;
-    //                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-    int availables[10] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-    int found;
-
-    for(i = 0; i < SIZE; i++){
-        nth = n / fact[8 - i];
-
-        found = -1;
-        while(nth > -1){
-            found++;
-            if(availables[found]){
-                nth--;
-            }
-        }
-        availables[found] = 0;
-        buf[i] = found - 1; 
-
-        n = n % fact[8-i];
-    }
-}
-
-
-bool
-test_perfhash(void)
-{
-    int buf[9];
-    int i;
-    bool ret = true;
-    perfhash(fact[9] - 1, buf);
-
-    for(i=0; i < 9; i++){
-        printf("%d,", buf[i]);
-        ret = ret && (buf[i] == 8 - i);
-    }
-
-    perfhash(0, buf);
-    for(i=0; i < 9; i++){
-        printf("%d,", buf[i]);
-        ret = ret && (buf[i] == i);
-    }
-    return ret;
-
-}
-
-
-bool
-rotate(int idx, int* buf)
-{
-    int i;
-    if(idx == -1){
-        for(i=0;i<SIZE;i++){
-            buf[i] = 0;
-        }
-        return true;
-    }
-    if(buf[idx] == 3){
-        return false;
-    }
-    buf[idx] ++;
-    return false;
-}
-
-typedef struct {
-    int fPattern[4];
-    /*
-     *   0
-     * 3   1
-     *   2
-     */
-} TTile;
-
-typedef struct {
-    int fPermutation[9];
-    int fRotation[9];
-} TPlacement;
-
-
-int
-idx2h(int idx)
-{
-    return idx % HSIZE;
-}
-
-int
-idx2v(int idx)
-{
-    return idx / HSIZE;
-}
-
-int
-hv2idx(int h, int v)
-{
-    return h + v*HSIZE;
-}
-
-int
-get_pattern(int idx, TTile* tiles, TPlacement* p, int direction)
-{
-    return (tiles[p->fPermutation[idx]]).fPattern[direction];
-}
-
-bool
-test_up(int idx, TTile* tiles, TPlacement* p)
-{
-    int h, v;
-    int n;
-
-    if(idx < HSIZE)
-        return true;
-    h = idx2h(idx);
-    v = idx2v(idx);
-    n = hv2idx(h - 1, v);
-
-    return !((get_pattern(n, tiles, p, 2) ^ get_pattern(idx, tiles, p, 0) ^ MATCHMASK) & MATCHMASK);
-}
-
-bool
-test_left(int idx, TTile* tiles, TPlacement* p)
-{
-    int h, v;
-    int n;
-
-    h = idx2h(idx);
-    if (h == 0)
-        return true;
-    v = idx2v(idx);
-    n = hv2idx(h - 1, v);
-
-    return !((get_pattern(n, tiles, p, 3) ^ get_pattern(idx, tiles, p, 1) ^ MATCHMASK) & MATCHMASK);
-}
-
-
-int
-try_placement(TTile* tiles, TPlacement* p)
-{
-    int idx;
-    bool ok;
-
-    for (idx=0; idx < SIZE; idx++){
-        ok = test_up(idx, tiles, p) && test_left(idx, tiles, p);
-        //testing left to right, top to bottom.
-        if(!ok)
-            return idx;//failed at.
-    }
-    return -1; //success. valid way to place tiles.
-}
-
 
 bool
 solve(TTile* tiles, TPlacement* p, int* start, int end)
@@ -224,104 +39,87 @@ main(int argc, char** argv)
     TTile tiles[9];
     TPlacement p;
 
-    if(TEST){
-        printf("%d\n", test_perfhash());
-    }else{
-        if (false){
-            for(i=0; i<SIZE; i++){
-                tiles[i].fPattern[0] = 1;
-                tiles[i].fPattern[1] = 4;
-                tiles[i].fPattern[2] = MATCHMASK - 1;
-                tiles[i].fPattern[3] = MATCHMASK - 4;
-            }
-            for(i=0; i<SIZE; i++){
-                tiles[i].fPattern[0] = 1;
-                tiles[i].fPattern[1] = 4;
-                tiles[i].fPattern[2] = MATCHMASK;
-                tiles[i].fPattern[3] = MATCHMASK;
-            }
-        }
-        //real data
-        
-        tiles[0].fPattern[0] = SHELLS_S;
-        tiles[0].fPattern[1] = SHELLS_N;
-        tiles[0].fPattern[2] = DRAGON_H;
-        tiles[0].fPattern[3] = FISH_H;
+    //real data
 
-        tiles[1].fPattern[0] = FISH_T;
-        tiles[1].fPattern[1] = CRAB_L;
-        tiles[1].fPattern[2] = DRAGON_H;
-        tiles[1].fPattern[3] = SHELLS_N;
+    tiles[0].fPattern[0] = SHELLS_S;
+    tiles[0].fPattern[1] = SHELLS_N;
+    tiles[0].fPattern[2] = DRAGON_H;
+    tiles[0].fPattern[3] = FISH_H;
 
-        tiles[2].fPattern[0] = FISH_H;
-        tiles[2].fPattern[1] = DRAGON_T;
-        tiles[2].fPattern[2] = FISH_T;
-        tiles[2].fPattern[3] = CRAB_R;
+    tiles[1].fPattern[0] = FISH_T;
+    tiles[1].fPattern[1] = CRAB_L;
+    tiles[1].fPattern[2] = DRAGON_H;
+    tiles[1].fPattern[3] = SHELLS_N;
 
-        tiles[3].fPattern[0] = DRAGON_T;
-        tiles[3].fPattern[1] = CRAB_R;
-        tiles[3].fPattern[2] = FISH_H;
-        tiles[3].fPattern[3] = SHELLS_S;
+    tiles[2].fPattern[0] = FISH_H;
+    tiles[2].fPattern[1] = DRAGON_T;
+    tiles[2].fPattern[2] = FISH_T;
+    tiles[2].fPattern[3] = CRAB_R;
 
-        tiles[4].fPattern[0] = DRAGON_T;
-        tiles[4].fPattern[1] = CRAB_R;
-        tiles[4].fPattern[2] = FISH_H;
-        tiles[4].fPattern[3] = SHELLS_N;
+    tiles[3].fPattern[0] = DRAGON_T;
+    tiles[3].fPattern[1] = CRAB_R;
+    tiles[3].fPattern[2] = FISH_H;
+    tiles[3].fPattern[3] = SHELLS_S;
 
-        tiles[5].fPattern[0] = FISH_H;
-        tiles[5].fPattern[1] = CRAB_R;
-        tiles[5].fPattern[2] = DRAGON_T;
-        tiles[5].fPattern[3] = SHELLS_N;
+    tiles[4].fPattern[0] = DRAGON_T;
+    tiles[4].fPattern[1] = CRAB_R;
+    tiles[4].fPattern[2] = FISH_H;
+    tiles[4].fPattern[3] = SHELLS_N;
 
-        tiles[6].fPattern[0] = FISH_T;
-        tiles[6].fPattern[1] = CRAB_L;
-        tiles[6].fPattern[2] = SHELLS_N;
-        tiles[6].fPattern[3] = DRAGON_T;
+    tiles[5].fPattern[0] = FISH_H;
+    tiles[5].fPattern[1] = CRAB_R;
+    tiles[5].fPattern[2] = DRAGON_T;
+    tiles[5].fPattern[3] = SHELLS_N;
 
-        tiles[7].fPattern[0] = DRAGON_H;
-        tiles[7].fPattern[1] = CRAB_R;
-        tiles[7].fPattern[2] = FISH_T;
-        tiles[7].fPattern[3] = SHELLS_S;
+    tiles[6].fPattern[0] = FISH_T;
+    tiles[6].fPattern[1] = CRAB_L;
+    tiles[6].fPattern[2] = SHELLS_N;
+    tiles[6].fPattern[3] = DRAGON_T;
 
-        tiles[8].fPattern[0] = CRAB_R;
-        tiles[8].fPattern[1] = CRAB_L;
-        tiles[8].fPattern[2] = DRAGON_T;
-        tiles[8].fPattern[3] = SHELLS_S;
+    tiles[7].fPattern[0] = DRAGON_H;
+    tiles[7].fPattern[1] = CRAB_R;
+    tiles[7].fPattern[2] = FISH_T;
+    tiles[7].fPattern[3] = SHELLS_S;
+
+    tiles[8].fPattern[0] = CRAB_R;
+    tiles[8].fPattern[1] = CRAB_L;
+    tiles[8].fPattern[2] = DRAGON_T;
+    tiles[8].fPattern[3] = SHELLS_S;
 
 
-        count = 0;
-        start = 0;
-        ln = 0;
-        while(start < fact[9]){
-            end = start + CHUNK < fact[9] ? start + CHUNK : fact[9];
-            found = solve(tiles, &p, &start, end);
-            if (found){
-                count++;
-                start++;
-                if(SHOW){
-                    for(i=0; i<SIZE; i++){
-                        printf("%d th -> (%d, %d)\n", i, p.fPermutation[i], p.fRotation[i]);
-                    }
-                }else{
-                    printf("!");
+    count = 0;
+    start = 0;
+    ln = 0;
+    while(start < fact[9]){
+        end = start + CHUNK < fact[9] ? start + CHUNK : fact[9];
+        found = solve(tiles, &p, &start, end);
+        if (found){
+            count++;
+            start++;
+            if(SHOW){
+                for(i=0; i<SIZE; i++){
+                    printf("%d th -> (%d, %d)\n", i, p.fPermutation[i], p.fRotation[i]);
                 }
             }else{
-                //fwrite(".", 1, 1, stdout);
-                if (false){
-                    printf(".");
-                    ln ++;
-                    if (ln >= 20){
-                        printf("\n");
-                        ln = 0;
-                    }
-                    fflush(stdout);
+                printf("!");
+            }
+        }else{
+            //fwrite(".", 1, 1, stdout);
+            if (false){
+                printf(".");
+                ln ++;
+                if (ln >= 20){
+                    printf("\n");
+                    ln = 0;
                 }
+                fflush(stdout);
             }
         }
-        printf("\n");
-        printf("=====\n");
-        printf("%d solutions found.\n", count);
-        fflush(stdout);
     }
+    printf("\n");
+    printf("=====\n");
+    printf("%d solutions found.\n", count);
+    fflush(stdout);
+    return 0;
 }
 
