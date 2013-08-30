@@ -9,7 +9,27 @@
 
 #define MATCHMASK (8+4+2+1)
 
+//Aqua
+#define CRAB_L (8+4+2)
+#define CRAB_R (1)
+#define FISH_H (8+4+1)
+#define FISH_T (2)
+#define DRAGON_H (8+2+1)
+#define DRAGON_T (4)
+#define SHELLS_S (4+2+1)
+#define SHELLS_N (8)
 
+
+//Bugs
+
+#define LADY_H (8+4+2)
+#define LADY_T (1)
+#define BEE_H (8+4+1)
+#define BEE_T (2)
+#define PURPLE_H (8+2+1)
+#define PURPLE_T (4)
+#define YELLOW_H (4+2+1)
+#define YELLOW_T (8)
 
 
 
@@ -27,6 +47,9 @@ typedef struct {
     int fRotation[9];
 } TPlacement;
 
+int idx2h(int idx);
+int idx2v(int idx);
+int hv2idx(int h, int v);
 
 extern int fact[];
 void perfhash(int n, int* buf);

@@ -7,28 +7,6 @@
 #define CHUNK 100000
 #define SHOW true
 
-//Aqua
-#define CRAB_L (8+4+2)
-#define CRAB_R (1)
-#define FISH_H (8+4+1)
-#define FISH_T (2)
-#define DRAGON_H (8+2+1)
-#define DRAGON_T (4)
-#define SHELLS_S (4+2+1)
-#define SHELLS_N (8)
-
-
-//Bugs
-
-#define LADY_H (8+4+2)
-#define LADY_T (1)
-#define BEE_H (8+4+1)
-#define BEE_T (2)
-#define PURPLE_H (8+2+1)
-#define PURPLE_T (4)
-#define YELLOW_H (4+2+1)
-#define YELLOW_T (8)
-
 
 
 
@@ -140,7 +118,6 @@ main(int argc, char** argv)
     tiles[8].fPattern[3] = LADY_T;
     
 
-
     count = 0;
     printf("argc= %d\n", argc);
     if (argc == 1){
@@ -160,15 +137,16 @@ main(int argc, char** argv)
 
         found = solve(tiles, &p, &start, end);
         if (found){
-            count++;
-            start++;
             if(SHOW){
+                printf("%d\n", start);
                 for(i=0; i<SIZE; i++){
                     printf("%d th -> (%d, %d)\n", i, p.fPermutation[i], p.fRotation[i]);
                 }
             }else{
                 printf("!");
             }
+            count++;
+            start++;
         }else{
             //fwrite(".", 1, 1, stdout);
             if (false){

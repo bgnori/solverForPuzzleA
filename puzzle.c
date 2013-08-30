@@ -3,19 +3,19 @@
 //            0! 1! 2! 3! 4!  5!   6!   7!    8!     9!      10!
 int fact[] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800};
 
-static int
+int
 idx2h(int idx)
 {
     return idx % HSIZE;
 }
 
-static int
+int
 idx2v(int idx)
 {
     return idx / HSIZE;
 }
 
-static int
+int
 hv2idx(int h, int v)
 {
     return h + v*HSIZE;
@@ -86,7 +86,7 @@ ok_up(int idx, TTile* tiles, TPlacement* p)
     v = idx2v(idx);
     n = hv2idx(h - 1, v);
 
-    return !((get_pattern(n, tiles, p, 2) ^ get_pattern(idx, tiles, p, 0) ^ MATCHMASK) & MATCHMASK);
+    return ((get_pattern(n, tiles, p, 2) ^ get_pattern(idx, tiles, p, 0) ^ MATCHMASK) & MATCHMASK);
 }
 
 bool
@@ -101,7 +101,7 @@ ok_left(int idx, TTile* tiles, TPlacement* p)
     v = idx2v(idx);
     n = hv2idx(h - 1, v);
 
-    return !((get_pattern(n, tiles, p, 3) ^ get_pattern(idx, tiles, p, 1) ^ MATCHMASK) & MATCHMASK);
+    return ((get_pattern(n, tiles, p, 3) ^ get_pattern(idx, tiles, p, 1) ^ MATCHMASK) & MATCHMASK);
 }
 
 
