@@ -54,13 +54,6 @@ test_fact_x(void)
 
 static
 const_char_p
-test_perfhash_x(void)
-{
-    return NULL;
-}
-
-static
-const_char_p
 test_perfhash_0(void)
 {
     int buf[9];
@@ -165,23 +158,61 @@ test_rotate_fail(void)
     return NULL;
 }
 
+static 
+void
+setUpEasyTiles(TTile* tiles)
+{
+    int i;
+    for(i=0; i<SIZE; i++){
+        tiles[i].fPattern[0] = 1;
+        tiles[i].fPattern[1] = 4;
+        tiles[i].fPattern[2] = MATCHMASK - 1;
+        tiles[i].fPattern[3] = MATCHMASK - 4;
+    }
+}
 
-/*
-        if (false){
-            for(i=0; i<SIZE; i++){
-                tiles[i].fPattern[0] = 1;
-                tiles[i].fPattern[1] = 4;
-                tiles[i].fPattern[2] = MATCHMASK - 1;
-                tiles[i].fPattern[3] = MATCHMASK - 4;
-            }
-            for(i=0; i<SIZE; i++){
-                tiles[i].fPattern[0] = 1;
-                tiles[i].fPattern[1] = 4;
-                tiles[i].fPattern[2] = MATCHMASK;
-                tiles[i].fPattern[3] = MATCHMASK;
-            }
-        }
-*/
+static 
+void
+setUpBadTiles(TTile* tiles)
+{
+    int i;
+    for(i=0; i<SIZE; i++){
+        tiles[i].fPattern[0] = 1;
+        tiles[i].fPattern[1] = 4;
+        tiles[i].fPattern[2] = MATCHMASK;
+        tiles[i].fPattern[3] = MATCHMASK;
+    }
+}
+
+static
+const_char_p
+test_ok_up_match(void)
+{
+    return NULL;
+}
+
+static
+const_char_p
+test_ok_up_mismatch(void)
+{
+    return NULL;
+}
+
+static
+const_char_p
+test_ok_left_match(void)
+{
+    return NULL;
+}
+
+static
+const_char_p
+test_ok_left_mismatch(void)
+{
+    return NULL;
+}
+
+
 
 
 
@@ -195,6 +226,10 @@ unittest cases[] = {
     test_rotate_clear,
     test_rotate_ok,
     test_rotate_fail,
+    test_ok_up_match,
+    test_ok_up_mismatch,
+    test_ok_left_match,
+    test_ok_left_mismatch,
 };
 
 int
