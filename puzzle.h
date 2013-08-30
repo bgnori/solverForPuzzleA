@@ -38,5 +38,8 @@ typedef struct {
 extern int fact[];
 void perfhash(int n, int* buf);
 bool rotate(int idx, int* buf);
+bool ok_up(int idx, TTile* tiles, TPlacement* p);
+bool ok_left(int idx, TTile* tiles, TPlacement* p);
+
 int try_placement(TTile* tiles, TPlacement* p);
 

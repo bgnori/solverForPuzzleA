@@ -185,9 +185,31 @@ setUpBadTiles(TTile* tiles)
 }
 
 static
+void
+setUpTrivialPlacemnet(TPlacement* placement)
+{
+    int i;
+        
+    perfhash(0, placement->fPermutation);
+    for(i=0; i < SIZE;i++){
+        placement->fRotation[i] = 0;
+    }
+}
+
+static
 const_char_p
 test_ok_up_match(void)
 {
+    TTile tiles[9];
+    TPlacement placement[9];
+
+    setUpEasyTiles(tiles);
+    setUpTrivialPlacemnet(placement);
+
+    if(!ok_up(0, tiles, placement))
+        return __func__;
+
+
     return NULL;
 }
 
@@ -211,8 +233,6 @@ test_ok_left_mismatch(void)
 {
     return NULL;
 }
-
-
 
 
 
