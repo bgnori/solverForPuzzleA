@@ -198,7 +198,7 @@ setUpTrivialPlacemnet(TPlacement* placement)
 
 static
 const_char_p
-test_ok_up_match(void)
+test_ok_up_match_0(void)
 {
     TTile tiles[9];
     TPlacement placement[9];
@@ -208,29 +208,82 @@ test_ok_up_match(void)
 
     if(!ok_up(0, tiles, placement))
         return __func__;
-
-
     return NULL;
 }
 
 static
 const_char_p
-test_ok_up_mismatch(void)
+test_ok_up_match_3(void)
 {
+    TTile tiles[9];
+    TPlacement placement[9];
+
+    setUpEasyTiles(tiles);
+    setUpTrivialPlacemnet(placement);
+
+    if(!ok_up(0, tiles, placement))
+        return __func__;
+    return NULL;
+}
+
+
+static
+const_char_p
+test_ok_up_mismatch_3(void)
+{
+    TTile tiles[9];
+    TPlacement placement[9];
+
+    setUpBadTiles(tiles);
+    setUpTrivialPlacemnet(placement);
+
+    if(ok_up(3, tiles, placement))
+        return __func__;
     return NULL;
 }
 
 static
 const_char_p
-test_ok_left_match(void)
+test_ok_left_match_0(void)
 {
+    TTile tiles[9];
+    TPlacement placement[9];
+
+    setUpEasyTiles(tiles);
+    setUpTrivialPlacemnet(placement);
+
+    if(!ok_left(0, tiles, placement))
+        return __func__;
     return NULL;
 }
 
 static
 const_char_p
-test_ok_left_mismatch(void)
+test_ok_left_match_1(void)
 {
+    TTile tiles[9];
+    TPlacement placement[9];
+
+    setUpEasyTiles(tiles);
+    setUpTrivialPlacemnet(placement);
+
+    if(!ok_left(1, tiles, placement))
+        return __func__;
+    return NULL;
+}
+
+static
+const_char_p
+test_ok_left_mismatch_1(void)
+{
+    TTile tiles[9];
+    TPlacement placement[9];
+
+    setUpBadTiles(tiles);
+    setUpTrivialPlacemnet(placement);
+
+    if(ok_left(1, tiles, placement))
+        return __func__;
     return NULL;
 }
 
@@ -246,10 +299,12 @@ unittest cases[] = {
     test_rotate_clear,
     test_rotate_ok,
     test_rotate_fail,
-    test_ok_up_match,
-    test_ok_up_mismatch,
-    test_ok_left_match,
-    test_ok_left_mismatch,
+    test_ok_up_match_0,
+    test_ok_up_match_3,
+    test_ok_up_mismatch_3,
+    test_ok_left_match_0,
+    test_ok_left_match_1,
+    test_ok_left_mismatch_1,
 };
 
 int
