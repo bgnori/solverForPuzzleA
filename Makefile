@@ -1,7 +1,10 @@
+
+START=0
+
 all: solver unittest
 
 run: solver
-	LD_LIBRARY_PATH=. ./solver
+	LD_LIBRARY_PATH=. ./solver $(START)
 
 test: unittest
 	LD_LIBRARY_PATH=. ./unittest

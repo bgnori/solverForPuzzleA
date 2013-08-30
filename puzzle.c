@@ -106,16 +106,16 @@ ok_left(int idx, TTile* tiles, TPlacement* p)
 
 
 int
-try_placement(TTile* tiles, TPlacement* p)
+failed_at(TTile* tiles, TPlacement* p)
 {
     int idx;
-    bool ok;
 
     for (idx=0; idx < SIZE; idx++){
-        ok = ok_up(idx, tiles, p) && ok_left(idx, tiles, p);
         //testing left to right, top to bottom.
-        if(!ok)
+        if(!ok_up(idx, tiles, p) ||
+           !ok_left(idx, tiles, p)){
             return idx;//failed at.
+        }
     }
     return -1; //success. valid way to place tiles.
 }
@@ -130,12 +130,13 @@ solve(TTile* tiles, TPlacement* p, int* start, int end)
         perfhash(i, p->fPermutation);
         at = -1;
         while(rotate(at, p->fRotation)){
-            at = try_placement(tiles, p);
+            at = failed_at(tiles, p);
             if (at < 0){
                 *start = i;
                 return true;
             }
         }
+        // may miss solution after solution.
     }
     return false;
 }

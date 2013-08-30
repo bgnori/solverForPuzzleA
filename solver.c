@@ -69,7 +69,13 @@ main(int argc, char** argv)
 
 
     count = 0;
-    start = 0;
+    printf("argc= %d\n", argc);
+    if (argc == 1){
+        start = 0;
+    }else{
+        sscanf(argv[1], "%i", &start);
+        printf("start = %d\n", start);
+    }
     ln = 0;
     while(start < fact[9]){
         end = start + CHUNK < fact[9] ? start + CHUNK : fact[9];
