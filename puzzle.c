@@ -138,6 +138,7 @@ solve(TTile* tiles, TPlacement* p, int* start, int end)
         }
         // may miss solution after solution.
     }
+    *start = i;
     return false;
 }
 

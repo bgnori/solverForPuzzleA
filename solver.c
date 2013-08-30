@@ -4,8 +4,8 @@
 
 // UGH!
 
-#define CHUNK 1000000
-#define SHOW false
+#define CHUNK 100000
+#define SHOW true
 
 
 int
@@ -78,7 +78,13 @@ main(int argc, char** argv)
     }
     ln = 0;
     while(start < fact[9]){
-        end = start + CHUNK < fact[9] ? start + CHUNK : fact[9];
+        if(start + CHUNK < fact[9]){
+            end =  start + CHUNK;
+        }else{
+            end = fact[9];
+        }
+        printf("end= %d\n", end);
+
         found = solve(tiles, &p, &start, end);
         if (found){
             count++;
