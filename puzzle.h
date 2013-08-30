@@ -9,17 +9,9 @@
 
 #define MATCHMASK (8+4+2+1)
 
-#define CRAB_L (8+4+2)
-#define CRAB_R (1)
 
-#define FISH_H (8+4+1)
-#define FISH_T (2)
 
-#define DRAGON_H (8+2+1)
-#define DRAGON_T (4)
 
-#define SHELLS_S (4+2+1)
-#define SHELLS_N (8)
 
 typedef struct {
     int fPattern[4];
